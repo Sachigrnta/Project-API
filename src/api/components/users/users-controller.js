@@ -86,14 +86,22 @@ async function updateUser(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
 
-    const success = await usersService.updateUser(id, name, email);
-    if (!success) {
+    //check if the email is already taken
+    const checkDuplicateEmail = await usersService.preventSameEmail(email);
+    if (checkDuplicateEmail == true) {
       throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'Failed to update user'
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'Email is already taken'
       );
+    } else if (checkDuplicateEmail == false) {
+      const success = await usersService.updateUser(id, name, email);
+      if (!success) {
+        throw errorResponder(
+          errorTypes.UNPROCESSABLE_ENTITY,
+          'Failed to update user'
+        );
+      }
     }
-
     return response.status(200).json({ id });
   } catch (error) {
     return next(error);
