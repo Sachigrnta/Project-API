@@ -62,6 +62,15 @@ async function createUser(name, email, password) {
 }
 
 /**
+ * prevent same/duplicate email
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function preventSameEmail(email) {
+  return await usersRepository.preventSameEmail(email);
+}
+
+/**
  * Update existing user
  * @param {string} id - User ID
  * @param {string} name - Name
