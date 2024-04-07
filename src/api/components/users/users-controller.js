@@ -56,7 +56,7 @@ async function createUser(request, response, next) {
     if (password != confirm_password) {
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
-        'Password and Confirm Password is diffrent'
+        'Password and Confirm Password is different'
       );
     }
 
