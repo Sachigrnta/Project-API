@@ -50,6 +50,15 @@ async function createUser(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
     const password = request.body.password;
+    const confirm_password = request.body.confirm_password;
+
+    //check if the password is same as the confirm_password
+    if (password != confirm_password) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'Password and Confirm Password is diffrent'
+      );
+    }
 
     //check if the email is already taken
     const checkDuplicateEmail = await usersService.preventSameEmail(email);
