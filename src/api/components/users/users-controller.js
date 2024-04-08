@@ -118,6 +118,35 @@ async function updateUser(request, response, next) {
 }
 
 /**
+ * Handle Change Password request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function changePassword(request, response, next) {
+  try {
+    const id = request.params.id;
+    const { oldPassword, newPassword } = request.body;
+
+    const passwordChanged = await usersService.changePassword(
+      id,
+      oldPassword,
+      newPassword
+    );
+    if (!passwordChanged) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'Old Password is incorrect'
+      );
+    }
+    return response.status(200).json({ id });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
  * Handle delete user request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
