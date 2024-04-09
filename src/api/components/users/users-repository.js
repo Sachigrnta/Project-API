@@ -71,6 +71,25 @@ async function updateUser(id, name, email) {
 }
 
 /**
+ * check old password
+ * @param {string} id
+ * @param {string} Password
+ * @returns {boolean}
+ */
+async function changePassword(id, password) {
+  return User.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: {
+        password,
+      },
+    }
+  );
+}
+
+/**
  * Delete a user
  * @param {string} id - User ID
  * @returns {Promise}
@@ -86,4 +105,5 @@ module.exports = {
   updateUser,
   deleteUser,
   preventSameEmail,
+  changePassword,
 };
