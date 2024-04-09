@@ -97,18 +97,18 @@ async function updateUser(id, name, email) {
 /**
  * check old password
  * @param {string} id
- * @param {string} Old_Password
- * @param {string} New_Password
+ * @param {string} old_password
+ * @param {string} new_password
  * @returns {boolean}
  */
-async function checkOldPass(id, Old_Password, New_Password) {
-  const hashedPassword = await hashPassword(New_Password);
+async function checkOldPass(id, old_password, new_password) {
+  const hashedPassword = await hashPassword(new_password);
   const user = await usersRepository.getUser(id);
 
   if (!user) {
     return null;
   }
-  const checkOldPass = await passwordMatched(Old_Password, user.password);
+  const checkOldPass = await passwordMatched(old_password, user.password);
   if (!checkOldPass) {
     return null;
   }
