@@ -24,24 +24,24 @@ module.exports = {
 
   changePassword: {
     body: {
-      Old_Password: joi
+      old_password: joi
         .string()
         .min(6)
         .max(32)
         .required()
-        .label('Old_Password'),
-      New_Password: joi
+        .label('old_password'),
+      new_password: joi
         .string()
         .min(6)
         .max(32)
         .required()
-        .label('New_Password'),
-      Confirm_New_Password: joi
+        .label('new_password'),
+      confirm_new_password: joi
         .string()
         .min(6)
         .max(32)
         .required()
-        .label('Confirm New Password'),
+        .label('confirm_new_password'),
     },
   },
 };
