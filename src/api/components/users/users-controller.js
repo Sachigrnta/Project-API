@@ -127,20 +127,32 @@ async function updateUser(request, response, next) {
 async function changePassword(request, response, next) {
   try {
     const id = request.params.id;
-    const { oldPassword, newPassword } = request.body;
+    const Old_Password = request.body.Old_Password;
+    const New_Password = request.body.New_Password;
+    const Confirm_New_Password = request.body.Confirm_New_Password;
 
-    const passwordChanged = await usersService.changePassword(
-      id,
-      oldPassword,
-      newPassword
-    );
-    if (!passwordChanged) {
+    //check if the old password is the same as the database password
+    const checkOldPass = await usersService.checkOldPass(id, Old_Password);
+    if (!checkOldPass) {
       throw errorResponder(
-        errorTypes.INVALID_PASSWORD,
+        errorTypes.UNPROCESSABLE_ENTITY,
         'Old Password is incorrect'
       );
     }
-    return response.status(200).json({ id });
+
+    //check the new password to prevent it same as the old password
+    if (Old_Password == New_Password) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'New Password cannot bet he same as old password'
+      );
+    } else if (New_Password != Confirm_New_Password) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'New Password and Confirm New Password didnt match'
+      );
+    }
+    return response.status(200).json({ id, Old_Password, New_Password });
   } catch (error) {
     return next(error);
   }
