@@ -127,32 +127,36 @@ async function updateUser(request, response, next) {
 async function changePassword(request, response, next) {
   try {
     const id = request.params.id;
-    const Old_Password = request.body.Old_Password;
-    const New_Password = request.body.New_Password;
-    const Confirm_New_Password = request.body.Confirm_New_Password;
-
-    //check if the old password is the same as the database password
-    const checkOldPass = await usersService.checkOldPass(id, Old_Password);
-    if (!checkOldPass) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'Old Password is incorrect'
-      );
-    }
+    const old_password = request.body.old_password;
+    const new_password = request.body.new_password;
+    const confirm_new_password = request.body.confirm_new_password;
 
     //check the new password to prevent it same as the old password
-    if (Old_Password == New_Password) {
+    if (old_password == new_password) {
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
         'New Password cannot bet he same as old password'
       );
-    } else if (New_Password != Confirm_New_Password) {
+    } else if (new_password != confirm_new_password) {
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
         'New Password and Confirm New Password didnt match'
       );
+    } else {
+      //check if the old password is the same as the database password
+      const checkOldPass = await usersService.checkOldPass(
+        id,
+        old_password,
+        new_password
+      );
+      if (!checkOldPass) {
+        throw errorResponder(
+          errorTypes.UNPROCESSABLE_ENTITY,
+          'Failed to change password'
+        );
+      }
+      return response.status(200).json({ id, old_password, new_password });
     }
-    return response.status(200).json({ id, Old_Password, New_Password });
   } catch (error) {
     return next(error);
   }

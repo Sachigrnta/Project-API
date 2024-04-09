@@ -1,5 +1,5 @@
 const usersRepository = require('./users-repository');
-const { hashPassword } = require('../../../utils/password');
+const { hashPassword, passwordMatched } = require('../../../utils/password');
 
 /**
  * Get list of users
@@ -106,6 +106,10 @@ async function checkOldPass(id, Old_Password, New_Password) {
   const user = await usersRepository.getUser(id);
 
   if (!user) {
+    return null;
+  }
+  const checkOldPass = await passwordMatched(Old_Password, user.password);
+  if (!checkOldPass) {
     return null;
   }
 
