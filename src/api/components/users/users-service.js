@@ -95,6 +95,29 @@ async function updateUser(id, name, email) {
 }
 
 /**
+ * check old password
+ * @param {string} id
+ * @param {string} Old_Password
+ * @param {string} New_Password
+ * @returns {boolean}
+ */
+async function checkOldPass(id, Old_Password, New_Password) {
+  const hashedPassword = await hashPassword(New_Password);
+  const user = await usersRepository.getUser(id);
+
+  if (!user) {
+    return null;
+  }
+
+  try {
+    await usersRepository.changePassword(id, hashedPassword);
+  } catch (err) {
+    return null;
+  }
+  return true;
+}
+
+/**
  * Delete user
  * @param {string} id - User ID
  * @returns {boolean}
@@ -123,4 +146,5 @@ module.exports = {
   updateUser,
   deleteUser,
   preventSameEmail,
+  checkOldPass,
 };
