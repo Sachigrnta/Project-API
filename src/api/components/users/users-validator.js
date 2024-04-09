@@ -24,19 +24,19 @@ module.exports = {
 
   changePassword: {
     body: {
-      old_Password: joi
+      Old_Password: joi
         .string()
         .min(6)
         .max(32)
         .required()
         .label('Old_Password'),
-      new_Password: joi
+      New_Password: joi
         .string()
         .min(6)
         .max(32)
         .required()
         .label('New_Password'),
-      confirm_New_Password: joi
+      Confirm_New_Password: joi
         .string()
         .min(6)
         .max(32)
